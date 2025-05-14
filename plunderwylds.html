@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plunderwylds Lore</title>
+  <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet" />
+  <script defer src="fog-canvas.js"></script>
+  <script defer src="flame-particles.js"></script>
+</head>
+<body>
+  <canvas id="fog-canvas"></canvas>
+  <div id="flame-container"></div>
+
+  <header>
+    <img src="logo.png" alt="Plunderwylds Logo" id="logo" class="glow-logo" />
+    <nav id="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="plunderwylds.html">Plunderwylds</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>The Plunderwylds</h1>
+      <p>
+  The Plunderwylds stretch far beyond what the eye sees or the map claims. It's a land both feared and coveted, whispered of in taverns and etched into the ramblings of mad cartographers. The mist that guards its borders is no ordinary fog — it remembers the faces of trespassers, the footsteps of greed. Those who enter without reverence rarely return the same… if at all.
+
+  Long before the crowns of men and the conclaves of mages, the Plunderwylds pulsed with the breath of Titans — beings neither god nor beast. Their bones now sleep beneath twisted roots, but their presence still stains the soil. Many believe the storms that echo across the canyons are the Titans arguing in their sleep.
+
+  The Wyldwood, the heart of the realm, is a sentient sprawl of living trees, each older than recorded time. Branches stretch like tendrils toward travelers who forget to speak the ancient oaths. It is said that the Wyldwood has a voice — not of words, but of wind, creaks, and dreams.
+
+  Scattered across the landscape are ruins of civilizations that dared to tame the Plunderwylds. Blackstone towers swallowed by moss. Obelisks cracked open by roots. Lanterns still glowing, though no soul has passed by in a thousand years. The land keeps what it wants, and what it wants… it never releases.
+
+  In the southern lowlands lies the Shattermere — a lake that reflects not what stands above it, but what once was. Many who gaze too long into its surface lose their way, speaking in ancient tongues and building shrines from driftwood and bone.
+
+  No map stays true. No star is safe to follow. The only guide worth trusting is instinct — and even that must be questioned near the edges of the Wylds.
+
+  Some brave it still. Treasure hunters, relic seekers, outcasts, oathbreakers, and the truly desperate. Those who return do so with relics pulsing with ancient energy — or tales too fragmented and wild to believe. But all of them agree on one thing: the Plunderwylds are alive… and they are watching.
+
+  Whether the Plunderwylds will be conquered, awakened, or simply endure long after memory fades — that remains unwritten. But for those who dare cross its threshold, the price is never just gold. It is truth. And truth always leaves a scar.
+</p>
+    <div class="wax-seal">
+      <img src="wax-seal.png" alt="Plunderwylds Wax Seal" />
+    </div>
+<div class="plunder-title-wrapper">
+  <div class="plunder-title" id="plunder-title">
+    <span>P</span><span>l</span><span>u</span><span>n</span><span>d</span><span>e</span><span>r</span><span>w</span><span>y</span><span>l</span><span>d</span><span>s</span>
+  </div>
+</div>
+    </section>
+  </main>
+<script>
+  const seal = document.querySelector('.wax-seal');
+  const title = document.querySelector('.plunder-title');
+
+  function revealWaxSealOnScroll() {
+    const windowHeight = window.innerHeight;
+    const sealTop = seal.getBoundingClientRect().top;
+
+    if (sealTop < windowHeight - 100) {
+      seal.classList.add('visible');
+      window.removeEventListener('scroll', revealWaxSealOnScroll);
+
+      // delay rune reveal until after seal animation (1.5s)
+      setTimeout(() => {
+        title.classList.add('visible');
+      }, 1500);
+    }
+  }
+
+  window.addEventListener('scroll', revealWaxSealOnScroll);
+</script>
+</body>
+</html>

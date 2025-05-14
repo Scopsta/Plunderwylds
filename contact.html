@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact - Plunderwylds</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet" />
+  <script defer src="fog-canvas.js"></script>
+  <script defer src="flame-particles.js"></script>
+</head>
+  <header>
+    <img src="logo.png" alt="Plunderwylds Logo" id="logo" class="glow-logo" />
+    <nav id="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="plunderwylds.html">Plunderwylds</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+<body>
+  <canvas id="fog-canvas"></canvas>
+  <div id="flame-container"></div>
+  <main>
+<section class="contact-form">
+  <h1>Contact Us</h1>
+  <form action="https://formspree.io/f/your-form-id" method="POST">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required placeholder="We will not store or sell your information whatsoever" />
+
+    <label for="message">Message</label>
+    <textarea id="message" name="message" rows="5" required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products - Plunderwylds</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    .product-block {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 4rem;
+      position: relative;
+      flex-wrap: wrap;
+    }
+
+    .placeholder-right {
+      width: 250px;
+      height: 300px;
+      background-color: white;
+      border: 4px dashed #aaa;
+      transform: rotate(20deg);
+      margin-left: 2rem;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .product-info {
+      text-align: left;
+      max-width: calc(100% - 300px);
+      min-width: 250px;
+      margin-right: auto;
+    }
+
+    .product-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #e3c390;
+      font-family: 'Cinzel Decorative', serif;
+    }
+
+    .product-description {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      color: #eee;
+      word-wrap: break-word;
+    }
+
+    .product-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .cart-btn, .remove-btn, .details-btn {
+      padding: 0.5rem 1rem;
+      font-family: 'Cinzel Decorative', serif;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cart-btn {
+      background-color: #00ffff;
+      color: #000;
+    }
+
+    .remove-btn {
+      background-color: #ff5e5e;
+      color: #fff;
+    }
+
+    .details-btn {
+      background-color: #e3c390;
+      color: #000;
+    }
+
+    .cart-btn:hover, .remove-btn:hover, .details-btn:hover {
+      transform: scale(1.05);
+    }
+
+    #cart-indicator {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px 18px;
+      color: #00ffff;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      border: 1px solid #00ffff;
+      border-radius: 10px;
+      z-index: 1000;
+    }
+
+    .details-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .details-content {
+      background: rgba(10, 10, 10, 0.8);
+      border: 2px solid #5c4420;
+      background-image: url('parchment-texture.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: #2a1a0f;
+      font-family: 'Georgia', serif;
+      max-width: 600px;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .details-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: #ff5e5e;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="flame-container"></div>
+
+  <header>
+    <img src="logo.png" alt="Plunderwylds Logo" id="logo" class="glow-logo" />
+    <nav id="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="plunderwylds.html">Plunderwylds</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+<div id="cart-indicator">
+  🛒 Cart (<span id="cart-count">0</span>)
+  <canvas id="cart-particles"></canvas>
+</div>
+
+  <main>
+<section class="intro">
+  <div class="product-block product-one">
+    <div class="product-info">
+      <h2 class="product-title">Botany & Herbalism</h2>
+	  <h3 class="product-subtitle">Of the Plunderwylds</h3>
+      <p class="product-description">
+        This is a placeholder description for Product One. It will include a mystical narrative, item utility, or collectible appeal. Additional lore or material details go here.
+      </p>
+      <div class="product-buttons">
+        <button class="cart-btn" data-product-id="p1" data-name="Product One" data-price="29.99">+ Cart</button>
+        <button class="remove-btn" data-product-id="p1">- Cart</button>
+        <button class="details-btn">Details</button>
+      </div>
+    </div>
+    <img src="Botany.jpg" alt="Botany Product" class="product-image right-tilt" />
+  </div>
+</section>
+  </main>
+
+  <div class="details-modal" id="details-modal">
+    <div class="details-content">
+      <button class="details-close" onclick="closeDetails()">X</button>
+      <h2 class="details-title">Botany & Herbalism</h2>
+	  <h3 class="details-subtitle">of the Plunderwylds</h3>
+      <p class="details-text">This is a more in depth look at the product. We can add more pictures, such as select pages from the book, or small items, etc.</p>
+    </div>
+  </div>
+
+  <script>
+    const cart = [];
+
+function updateCartIndicator() {
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartIndicator = document.getElementById('cart-indicator');
+  document.getElementById('cart-count').textContent = cartCount;
+
+  if (cartCount > 0) {
+    cartIndicator.classList.add('active');
+    startCartParticles(); // <- Start orbs
+  } else {
+    cartIndicator.classList.remove('active');
+    clearCartParticles(); // <- Stop orbs
+  }
+}
+
+document.querySelectorAll('.cart-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const id = button.getAttribute('data-product-id');
+    const name = button.getAttribute('data-name');
+    const price = parseFloat(button.getAttribute('data-price'));
+
+    const existing = cart.find(item => item.id === id);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ id, name, price, quantity: 1 });
+    }
+
+    updateCartIndicator(); // <- THIS LINE MUST BE HERE
+  });
+});
+
+document.querySelectorAll('.remove-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const id = button.getAttribute('data-product-id');
+    const existing = cart.find(item => item.id === id);
+
+    if (existing) {
+      existing.quantity -= 1;
+      if (existing.quantity <= 0) {
+        const index = cart.findIndex(item => item.id === id);
+        if (index !== -1) cart.splice(index, 1);
+      }
+    }
+
+    updateCartIndicator(); // <- THIS LINE MUST BE HERE
+  });
+});
+
+    document.querySelectorAll('.details-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        document.getElementById('details-modal').style.display = 'flex';
+      });
+    });
+
+	document.querySelectorAll('.product-image').forEach(image => {
+	  image.addEventListener('click', () => {
+		document.getElementById('details-modal').style.display = 'flex';
+	  });
+	});
+
+
+    function closeDetails() {
+      document.getElementById('details-modal').style.display = 'none';
+    }
+
+    updateCartIndicator();
+  </script>
+<script>
+const cartCanvas = document.getElementById('cart-particles');
+const cartCtx = cartCanvas.getContext('2d');
+let cartParticles = [];
+
+function resizeCartCanvas() {
+  cartCanvas.width = cartCanvas.offsetWidth;
+  cartCanvas.height = cartCanvas.offsetHeight;
+}
+
+function createCartParticle() {
+  return {
+    x: Math.random() * cartCanvas.width,
+    y: Math.random() * cartCanvas.height,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    radius: Math.random() * 1.5 + 1,
+    alpha: Math.random() * 0.5 + 0.3
+  };
+}
+
+function updateCartParticles() {
+  cartCtx.clearRect(0, 0, cartCanvas.width, cartCanvas.height);
+  for (let i = 0; i < cartParticles.length; i++) {
+    let p = cartParticles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+
+    if (p.x < 0 || p.x > cartCanvas.width || p.y < 0 || p.y > cartCanvas.height) {
+      cartParticles[i] = createCartParticle();
+      continue;
+    }
+
+    cartCtx.beginPath();
+    cartCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    cartCtx.fillStyle = `rgba(0, 255, 255, ${p.alpha})`;
+    cartCtx.fill();
+  }
+}
+
+function animateCartParticles() {
+  updateCartParticles();
+  requestAnimationFrame(animateCartParticles);
+}
+
+function startCartParticles(count = 30) {
+  cartParticles = [];
+  for (let i = 0; i < count; i++) {
+    cartParticles.push(createCartParticle());
+  }
+  resizeCartCanvas();
+  animateCartParticles();
+}
+
+window.addEventListener('resize', resizeCartCanvas);
+
+// Optional: kill the animation if needed
+function clearCartParticles() {
+  cartParticles = [];
+  cartCtx.clearRect(0, 0, cartCanvas.width, cartCanvas.height);
+}
+</script>
+</body>
+</html>
