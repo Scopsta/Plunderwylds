@@ -169,7 +169,10 @@
         This is a placeholder description for Product One. It will include a mystical narrative, item utility, or collectible appeal. Additional lore or material details go here.
       </p>
       <div class="product-buttons">
-        <button class="cart-btn" data-product-id="p1" data-name="Product One" data-price="29.99">+ Cart</button>
+<div class="button-wrapper" style="position: relative; display: flex; align-items: center; z-index: 3; overflow: visible;">
+<canvas class="flame-canvas" id="cart-canvas" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 100;"></canvas>
+  <button class="cart-btn" id="cart-btn" data-product-id="p1" data-name="Product One" data-price="29.99">+ Cart</button>
+</div>
         <button class="remove-btn" data-product-id="p1">- Cart</button>
         <button class="details-btn">Details</button>
       </div>
@@ -189,53 +192,144 @@
   </div>
 
   <script>
-    const cart = [];
+    window.cart = [];
+
+let previousCartCount = 0;
 
 function updateCartIndicator() {
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = window.cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartIndicator = document.getElementById('cart-indicator');
   document.getElementById('cart-count').textContent = cartCount;
 
-  if (cartCount > 0) {
-    cartIndicator.classList.add('active');
-    startCartParticles(); // <- Start orbs
+setTimeout(() => {
+  const cartIndicator = document.getElementById('cart-indicator');
+  const cartCount = window.cart.reduce((sum, item) => sum + item.quantity, 0);
+  if (cartCount > 1) {
+    cartIndicator.classList.add('cart-breathe');
   } else {
-    cartIndicator.classList.remove('active');
-    clearCartParticles(); // <- Stop orbs
+    cartIndicator.classList.remove('cart-breathe');
   }
+}, 3800); // Wait 3.8 seconds to apply breathing
+
+  if (cartCount > 0) {
+    if (previousCartCount === 0) {
+      startCartParticles();
+    }
+  } else {
+    cartIndicator.classList.remove('cart-pulse');
+    clearCartParticles();
+    if (typeof window.triggerCartEmptyVisual === 'function') {
+      window.triggerCartEmptyVisual();
+    }
+  }
+
+  previousCartCount = cartCount;
 }
 
 document.querySelectorAll('.cart-btn').forEach(button => {
-  button.addEventListener('click', () => {
+  button.addEventListener('click', async () => {
+    // Read product info from the button
     const id = button.getAttribute('data-product-id');
     const name = button.getAttribute('data-name');
     const price = parseFloat(button.getAttribute('data-price'));
 
-    const existing = cart.find(item => item.id === id);
+    // Store this product globally
+    window.selectedProduct = { id, name, price };
+
+    // Start orb animation
+    window.emitting = true;
+
+    const canvas = document.getElementById('cart-canvas');
+    const cartEl = document.getElementById('cart-indicator');
+    const canvasRect = canvas.getBoundingClientRect();
+    const cartRect = cartEl.getBoundingClientRect();
+    const dx = cartRect.left + cartRect.width / 2 - (canvasRect.left + canvasRect.width / 2);
+    const dy = cartRect.top + cartRect.height / 2 - (canvasRect.top + canvasRect.height / 2);
+
+    await window.delay(1800); // Let orbs wiggle
+	window.emitting = false;
+
+    canvas.style.transition = 'transform 1.5s ease-in-out, opacity 0.6s ease-out 1.5s';
+    canvas.style.transform = `translate(${dx}px, ${dy}px) scale(0.4)`;
+    canvas.style.opacity = '0';
+
+    await window.delay(1500); // Let orbs fly
+
+    window.startGlowPulse('cart-pulse'); // Glow pulse
+
+    await window.delay(500); // Glow completes
+
+    // ✅ Now retrieve product info from the global object
+    const product = window.selectedProduct;
+    if (!product) {
+      console.error("No product info found for cart update.");
+      return;
+    }
+
+    if (!window.cart) window.cart = [];
+    const existing = window.cart.find(item => item.id === product.id);
     if (existing) {
       existing.quantity += 1;
     } else {
-      cart.push({ id, name, price, quantity: 1 });
+      window.cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1 });
     }
 
-    updateCartIndicator(); // <- THIS LINE MUST BE HERE
+    console.log("Cart now:", window.cart);
+    updateCartIndicator();
+
+// Add breathing effect only after animations complete
+const cartIndicator = document.getElementById('cart-indicator');
+const cartCount = window.cart.reduce((sum, item) => sum + item.quantity, 0);
+if (cartCount > 1) {
+  cartIndicator.classList.remove('cart-breathe');
+  void cartIndicator.offsetWidth;
+  cartIndicator.classList.add('cart-breathe');
+} else {
+  cartIndicator.classList.remove('cart-breathe');
+}
+
+
+    // Reset visuals
+    canvas.style.transition = '';
+    canvas.style.transform = '';
+    canvas.style.opacity = '1';
+    window.clearFlameParticles();
+    cartEl.classList.remove('cart-pulse');
+    window.emitting = false;
   });
 });
+
+
 
 document.querySelectorAll('.remove-btn').forEach(button => {
   button.addEventListener('click', () => {
     const id = button.getAttribute('data-product-id');
-    const existing = cart.find(item => item.id === id);
+    const existing = window.cart.find(item => item.id === id);
 
     if (existing) {
       existing.quantity -= 1;
       if (existing.quantity <= 0) {
-        const index = cart.findIndex(item => item.id === id);
+        const index = window.cart.findIndex(item => item.id === id);
         if (index !== -1) cart.splice(index, 1);
+        if (window.cart.length === 0 && typeof window.triggerCartEmptyVisual === 'function') {
+          window.triggerCartEmptyVisual(); // 🔁 Reverse sequence
+        }
       }
     }
 
-    updateCartIndicator(); // <- THIS LINE MUST BE HERE
+    updateCartIndicator();
+
+// Add breathing effect only after animations complete
+const cartIndicator = document.getElementById('cart-indicator');
+const cartCount = window.cart.reduce((sum, item) => sum + item.quantity, 0);
+if (cartCount > 1) {
+  cartIndicator.classList.remove('cart-breathe');
+  void cartIndicator.offsetWidth;
+  cartIndicator.classList.add('cart-breathe');
+} else {
+  cartIndicator.classList.remove('cart-breathe');
+}
+ // ← move this OUTSIDE the if-block
   });
 });
 
@@ -257,6 +351,19 @@ document.querySelectorAll('.remove-btn').forEach(button => {
     }
 
     updateCartIndicator();
+
+// Add breathing effect only after animations complete
+const cartIndicator = document.getElementById('cart-indicator');
+const cartCount = window.cart.reduce((sum, item) => sum + item.quantity, 0);
+if (cartCount > 1) {
+  cartIndicator.classList.remove('cart-breathe');
+  void cartIndicator.offsetWidth;
+  cartIndicator.classList.add('cart-breathe');
+} else {
+  cartIndicator.classList.remove('cart-breathe');
+}
+
+	document.getElementById('cart-indicator').classList.add('cart-breathe');
   </script>
 <script>
 const cartCanvas = document.getElementById('cart-particles');
@@ -320,5 +427,6 @@ function clearCartParticles() {
   cartCtx.clearRect(0, 0, cartCanvas.width, cartCanvas.height);
 }
 </script>
+<script src="flame-fly.js" defer></script>
 </body>
 </html>
